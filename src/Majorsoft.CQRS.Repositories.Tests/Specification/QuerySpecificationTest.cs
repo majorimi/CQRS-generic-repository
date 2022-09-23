@@ -17,10 +17,15 @@ namespace Majorsoft.CQRS.Repositories.Tests.Specification
 			var querySpecifications = new QuerySpecification<Event>();
 
 			Assert.AreEqual(null, querySpecifications.FilterCondition);
-			Assert.AreEqual(null, querySpecifications.Includes);
-			Assert.AreEqual(null, querySpecifications.IncludeStrings);
+			Assert.IsNotNull(querySpecifications.FilterConditions);
+			Assert.AreEqual(0, querySpecifications.FilterConditions.Count());
+			Assert.IsNotNull(querySpecifications.Includes);
+			Assert.AreEqual(0, querySpecifications.Includes.Count());
+			Assert.IsNotNull(querySpecifications.IncludeStrings);
+			Assert.AreEqual(0, querySpecifications.IncludeStrings.Count());
 			Assert.AreEqual(false, querySpecifications.IsNonTrackableQuery);
-			Assert.AreEqual(null, querySpecifications.OrderOptions);
+			Assert.IsNotNull(querySpecifications.OrderOptions);
+			Assert.AreEqual(0, querySpecifications.OrderOptions.Count());
 		}
 
 		[TestMethod]
@@ -30,17 +35,24 @@ namespace Majorsoft.CQRS.Repositories.Tests.Specification
 			var querySpecifications = new QuerySpecification<Event>(filterCondition);
 
 			Assert.AreEqual(filterCondition, querySpecifications.FilterCondition);
-			Assert.AreEqual(null, querySpecifications.Includes);
-			Assert.AreEqual(null, querySpecifications.IncludeStrings);
+			Assert.IsNotNull(querySpecifications.FilterConditions);
+			Assert.AreEqual(0, querySpecifications.FilterConditions.Count());
+			Assert.IsNotNull(querySpecifications.Includes);
+			Assert.AreEqual(0, querySpecifications.Includes.Count());
+			Assert.IsNotNull(querySpecifications.IncludeStrings);
+			Assert.AreEqual(0, querySpecifications.IncludeStrings.Count()); 
 			Assert.AreEqual(false, querySpecifications.IsNonTrackableQuery);
-			Assert.AreEqual(null, querySpecifications.OrderOptions);
+			Assert.IsNotNull(querySpecifications.OrderOptions);
+			Assert.AreEqual(0, querySpecifications.OrderOptions.Count());
 		}
 
 		[TestMethod]
 		public void QuerySpecification_should_set_QueryOptions_from_constructor()
 		{
-			var expressions = new List<Expression<Func<Event, object>>>();
-			expressions.Add(x => x.EventAccessControls);
+			var expressions = new List<Expression<Func<Event, object>>>
+			{
+				x => x.EventAccessControls
+			};
 			var orderExpressions = new OrderOption<Event>[]
 				{
 					new OrderOption<Event>(x => x.CreatedDate, false)
@@ -57,7 +69,8 @@ namespace Majorsoft.CQRS.Repositories.Tests.Specification
 
 			Assert.AreEqual(options.FilterCondition, querySpecifications.FilterCondition);
 			Assert.AreEqual(options.Includes, querySpecifications.Includes);
-			Assert.AreEqual(null, querySpecifications.IncludeStrings);
+			Assert.IsNotNull(querySpecifications.IncludeStrings);
+			Assert.AreEqual(0, querySpecifications.IncludeStrings.Count()); 
 			Assert.AreEqual(false, querySpecifications.IsNonTrackableQuery);
 			Assert.AreEqual(options.OrderBy, querySpecifications.OrderOptions);
 		}
@@ -69,10 +82,15 @@ namespace Majorsoft.CQRS.Repositories.Tests.Specification
 			querySpecifications.ApplyFilter(x => x.EventId == Guid.Empty);
 
 			Assert.IsNotNull(querySpecifications.FilterCondition);
-			Assert.AreEqual(null, querySpecifications.Includes);
-			Assert.AreEqual(null, querySpecifications.IncludeStrings);
+			Assert.IsNotNull(querySpecifications.FilterConditions);
+			Assert.AreEqual(0, querySpecifications.FilterConditions.Count());
+			Assert.IsNotNull(querySpecifications.Includes);
+			Assert.AreEqual(0, querySpecifications.Includes.Count());
+			Assert.IsNotNull(querySpecifications.IncludeStrings);
+			Assert.AreEqual(0, querySpecifications.IncludeStrings.Count()); 
 			Assert.AreEqual(false, querySpecifications.IsNonTrackableQuery);
-			Assert.AreEqual(null, querySpecifications.OrderOptions);
+			Assert.IsNotNull(querySpecifications.OrderOptions);
+			Assert.AreEqual(0, querySpecifications.OrderOptions.Count());
 		}
 
 		[TestMethod]
@@ -82,11 +100,34 @@ namespace Majorsoft.CQRS.Repositories.Tests.Specification
 			querySpecifications.ApplyIncludes(x => x.Documents, x => x.Links);
 
 			Assert.AreEqual(null, querySpecifications.FilterCondition);
+			Assert.IsNotNull(querySpecifications.FilterConditions);
+			Assert.AreEqual(0, querySpecifications.FilterConditions.Count());
 			Assert.IsNotNull(querySpecifications.Includes);
 			Assert.AreEqual(2, querySpecifications.Includes.Count());
-			Assert.AreEqual(null, querySpecifications.IncludeStrings);
+			Assert.IsNotNull(querySpecifications.IncludeStrings);
+			Assert.AreEqual(0, querySpecifications.IncludeStrings.Count()); 
 			Assert.AreEqual(false, querySpecifications.IsNonTrackableQuery);
-			Assert.AreEqual(null, querySpecifications.OrderOptions);
+			Assert.IsNotNull(querySpecifications.OrderOptions);
+			Assert.AreEqual(0, querySpecifications.OrderOptions.Count());
+		}
+
+		[TestMethod]
+		public void QuerySpecification_should_have_ApplyIncludes_multiple_times()
+		{
+			var querySpecifications = new QuerySpecification<Event>();
+			querySpecifications.ApplyIncludes(x => x.Documents, x => x.Links);
+			querySpecifications.ApplyIncludes(x => x.EventAccessControls);
+
+			Assert.AreEqual(null, querySpecifications.FilterCondition);
+			Assert.IsNotNull(querySpecifications.FilterConditions);
+			Assert.AreEqual(0, querySpecifications.FilterConditions.Count());
+			Assert.IsNotNull(querySpecifications.Includes);
+			Assert.AreEqual(3, querySpecifications.Includes.Count());
+			Assert.IsNotNull(querySpecifications.IncludeStrings);
+			Assert.AreEqual(0, querySpecifications.IncludeStrings.Count());
+			Assert.AreEqual(false, querySpecifications.IsNonTrackableQuery);
+			Assert.IsNotNull(querySpecifications.OrderOptions);
+			Assert.AreEqual(0, querySpecifications.OrderOptions.Count());
 		}
 
 		[TestMethod]
@@ -97,11 +138,35 @@ namespace Majorsoft.CQRS.Repositories.Tests.Specification
 				.ApplyIncludes($"{nameof(Event.Documents)}", $"{nameof(Event.Links)}");
 
 			Assert.AreEqual(null, querySpecifications.FilterCondition);
-			Assert.AreEqual(null, querySpecifications.Includes);
+			Assert.IsNotNull(querySpecifications.FilterConditions);
+			Assert.AreEqual(0, querySpecifications.FilterConditions.Count());
+			Assert.IsNotNull(querySpecifications.Includes);
+			Assert.AreEqual(0, querySpecifications.Includes.Count());
 			Assert.IsNotNull(querySpecifications.IncludeStrings);
 			Assert.AreEqual(2, querySpecifications.IncludeStrings.Count());
 			Assert.AreEqual(false, querySpecifications.IsNonTrackableQuery);
-			Assert.AreEqual(null, querySpecifications.OrderOptions);
+			Assert.IsNotNull(querySpecifications.OrderOptions);
+			Assert.AreEqual(0, querySpecifications.OrderOptions.Count());
+		}
+
+		[TestMethod]
+		public void QuerySpecification_should_have_ApplyIncludes_with_string_multiple_times()
+		{
+			var querySpecifications = new QuerySpecification<Event>();
+
+			querySpecifications.ApplyIncludes($"{nameof(Event.Documents)}", $"{nameof(Event.Links)}");
+			querySpecifications.ApplyIncludes("NotExisting");
+
+			Assert.AreEqual(null, querySpecifications.FilterCondition);
+			Assert.IsNotNull(querySpecifications.FilterConditions);
+			Assert.AreEqual(0, querySpecifications.FilterConditions.Count());
+			Assert.IsNotNull(querySpecifications.Includes);
+			Assert.AreEqual(0, querySpecifications.Includes.Count());
+			Assert.IsNotNull(querySpecifications.IncludeStrings);
+			Assert.AreEqual(3, querySpecifications.IncludeStrings.Count());
+			Assert.AreEqual(false, querySpecifications.IsNonTrackableQuery);
+			Assert.IsNotNull(querySpecifications.OrderOptions);
+			Assert.AreEqual(0, querySpecifications.OrderOptions.Count());
 		}
 
 		[TestMethod]
@@ -111,9 +176,13 @@ namespace Majorsoft.CQRS.Repositories.Tests.Specification
 			querySpecifications.ApplyOrderBy(new OrderOption<Event>(x => x.EventId, false));
 
 			Assert.AreEqual(null, querySpecifications.FilterCondition);
+			Assert.IsNotNull(querySpecifications.FilterConditions);
+			Assert.AreEqual(0, querySpecifications.FilterConditions.Count());
 			Assert.IsNotNull(querySpecifications.OrderOptions);
-			Assert.AreEqual(null, querySpecifications.Includes);
-			Assert.AreEqual(null, querySpecifications.IncludeStrings);
+			Assert.IsNotNull(querySpecifications.Includes);
+			Assert.AreEqual(0, querySpecifications.Includes.Count());
+			Assert.IsNotNull(querySpecifications.IncludeStrings);
+			Assert.AreEqual(0, querySpecifications.IncludeStrings.Count()); 
 			Assert.AreEqual(false, querySpecifications.IsNonTrackableQuery);
 		}
 
@@ -124,10 +193,15 @@ namespace Majorsoft.CQRS.Repositories.Tests.Specification
 			querySpecifications.AsNonTracking();
 
 			Assert.AreEqual(null, querySpecifications.FilterCondition);
-			Assert.AreEqual(null, querySpecifications.Includes);
-			Assert.AreEqual(null, querySpecifications.IncludeStrings);
+			Assert.IsNotNull(querySpecifications.FilterConditions);
+			Assert.AreEqual(0, querySpecifications.FilterConditions.Count());
+			Assert.IsNotNull(querySpecifications.Includes);
+			Assert.AreEqual(0, querySpecifications.Includes.Count());
+			Assert.IsNotNull(querySpecifications.IncludeStrings);
+			Assert.AreEqual(0, querySpecifications.IncludeStrings.Count()); 
 			Assert.AreEqual(true, querySpecifications.IsNonTrackableQuery);
-			Assert.AreEqual(null, querySpecifications.OrderOptions);
+			Assert.IsNotNull(querySpecifications.OrderOptions);
+			Assert.AreEqual(0, querySpecifications.OrderOptions.Count());
 		}
 
 		[TestMethod]
@@ -136,9 +210,19 @@ namespace Majorsoft.CQRS.Repositories.Tests.Specification
 			var querySpecifications = new QuerySpecification<Event>();
 			Expression<Func<Event, bool>> filterByEventId = x => x.EventId == Guid.Empty;
 			Expression<Func<Event, bool>> isPublic = x => x.PublicFlag.HasValue && x.PublicFlag.Value;
+			
 			querySpecifications.ApplyFilters(filterByEventId, isPublic);
 
-			Assert.AreEqual(querySpecifications.FilterConditions.Count(), 2);
+			Assert.AreEqual(null, querySpecifications.FilterCondition);
+			Assert.IsNotNull(querySpecifications.FilterConditions);
+			Assert.AreEqual(2, querySpecifications.FilterConditions.Count());
+			Assert.IsNotNull(querySpecifications.Includes);
+			Assert.AreEqual(0, querySpecifications.Includes.Count());
+			Assert.IsNotNull(querySpecifications.IncludeStrings);
+			Assert.AreEqual(0, querySpecifications.IncludeStrings.Count());
+			Assert.AreEqual(false, querySpecifications.IsNonTrackableQuery);
+			Assert.IsNotNull(querySpecifications.OrderOptions);
+			Assert.AreEqual(0, querySpecifications.OrderOptions.Count());
 		}
 
 		[TestMethod]
@@ -149,16 +233,24 @@ namespace Majorsoft.CQRS.Repositories.Tests.Specification
 			Expression<Func<Event, bool>> isPublic = x => x.PublicFlag.HasValue && x.PublicFlag.Value;
 			querySpecifications.ApplyFilters(filterByEventId, isPublic);
 
-			Expression<Func<Event, bool>> filterEventDate = x => x.EventDate == DateTime.Now;
-			querySpecifications.ApplyFilters(filterEventDate);
+			querySpecifications.ApplyFilters(x => x.EventDate == DateTime.Now);
 
-			Assert.AreEqual(querySpecifications.FilterConditions.Count(), 3);
+			Assert.AreEqual(null, querySpecifications.FilterCondition);
+			Assert.IsNotNull(querySpecifications.FilterConditions);
+			Assert.AreEqual(3, querySpecifications.FilterConditions.Count());
+			Assert.IsNotNull(querySpecifications.Includes);
+			Assert.AreEqual(0, querySpecifications.Includes.Count());
+			Assert.IsNotNull(querySpecifications.IncludeStrings);
+			Assert.AreEqual(0, querySpecifications.IncludeStrings.Count());
+			Assert.AreEqual(false, querySpecifications.IsNonTrackableQuery);
+			Assert.IsNotNull(querySpecifications.OrderOptions);
+			Assert.AreEqual(0, querySpecifications.OrderOptions.Count());
 		}
 
 		[TestMethod]
 		public void QuerySpecification_ToString_should_return_custom_value()
 		{
-			var querySpecifications = new QuerySpecification<Event>();
+			var querySpecifications = new QuerySpecification<Event>(x => x.CreatedBy == "user");
 			Expression<Func<Event, bool>> filterByEventId = x => x.EventId == Guid.Parse("{0057214B-8C2E-4341-BF3B-33091B18DEFA}");
 			Expression<Func<Event, bool>> isPublic = x => x.PublicFlag.HasValue && x.PublicFlag.Value;
 			querySpecifications.ApplyFilters(filterByEventId, isPublic);
@@ -173,7 +265,7 @@ namespace Majorsoft.CQRS.Repositories.Tests.Specification
 
 			var str = querySpecifications.ToString();
 
-			Assert.AreEqual("IQuerySpecification<Majorsoft.CQRS.Repositories.Tests.TestDb.Event>_FilterConditions:x => (x.EventDate == Convert(DateTime.Now, Nullable`1)),x => (x.EventId == Parse(\"{0057214B-8C2E-4341-BF3B-33091B18DEFA}\")),x => (x.PublicFlag.HasValue AndAlso x.PublicFlag.Value)_OrderOptions:OrderOption_OrderBy:x => Convert(x.EventDate, Object)_Descending:True,OrderOption_OrderBy:x => Convert(x.EventId, Object)_Descending:False_Includes:x => x.EventAccessControls_IncludeStrings:FakeInclude_IsNonTrackableQuery:False", str);
+			Assert.AreEqual("IQuerySpecification<Majorsoft.CQRS.Repositories.Tests.TestDb.Event>_FilterCondition:x => (x.CreatedBy == \"user\")_FilterConditions:x => (x.EventId == Parse(\"{0057214B-8C2E-4341-BF3B-33091B18DEFA}\")),x => (x.PublicFlag.HasValue AndAlso x.PublicFlag.Value),x => (x.EventDate == Convert(DateTime.Now, Nullable`1))_OrderOptions:OrderOption_OrderBy:x => Convert(x.EventDate, Object)_Descending:True,OrderOption_OrderBy:x => Convert(x.EventId, Object)_Descending:False_Includes:x => x.EventAccessControls_IncludeStrings:FakeInclude_IsNonTrackableQuery:False", str);
 		}
 	}
 }

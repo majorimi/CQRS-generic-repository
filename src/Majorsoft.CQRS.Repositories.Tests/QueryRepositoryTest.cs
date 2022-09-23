@@ -645,6 +645,16 @@ namespace Majorsoft.CQRS.Usie.Repositories.Tests
 
 		#endregion
 
+		#region GetList
+
+		[TestMethod]
+		public void QueryRepository_GetList_should_execute_sql()
+		{
+			var dataTable = _linkQueryRepository.GetList("select * from Link");
+		}
+
+		#endregion
+
 		#region Task<IEnumerable<T>> GetListAsync<TResult> Paged
 
 		[TestMethod]
