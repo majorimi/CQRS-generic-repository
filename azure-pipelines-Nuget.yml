@@ -1,0 +1,102 @@
+trigger: none
+pr: none
+
+name: 1.0.$(rev:r)
+
+pool:
+  vmImage: 'ubuntu-latest'
+
+variables:
+  solution: 'src/Majorsoft.CQRS.Repositories.sln'
+  buildPlatform: 'Any CPU'
+  buildConfiguration: 'Release'
+  AssemblyCompany: 'Majorsoft'
+  AssemblyAuthor: 'Imre Toth'
+  AssemblyProduct: 'Majorsoft CQRS Generic Repositories'
+  AssemblyCopyright: 'Copyright © 2022 Majorsoft'
+  AssemblyVersion: '${{ parameters.AssemblyVersion }}'
+  PreviewPackageVersion: '${{ parameters.PreviewPackageVersion }}'
+
+parameters:
+- name: AssemblyVersion
+  displayName: 'Required Nuget package version e.g. "1.0.0"'
+  type: string
+  default: ''
+- name: PreviewPackageVersion
+  displayName: 'Optional Preview version e.g. "-rc.2.20479.15"'
+  type: string
+  default: ' '
+
+jobs:
+  - job: BuildAndPublish
+    displayName: Package Nuget
+    steps:
+
+    - task: UseDotNet@2
+      displayName: Install .NET 6
+      inputs:
+       packageType: 'sdk'
+       version: '6.0.x' # replace this value with the version that you need for your project
+
+    - task: Assembly-Info-NetCore@2
+      displayName: 'Update Web Assembly Info'
+      inputs:
+        Path: '$(Build.SourcesDirectory)'
+        FileNames: '/src/**/*.csproj'
+        InsertAttributes: true
+        FileEncoding: 'auto'
+        WriteBOM: false
+        Authors: '$(AssemblyAuthor)'
+        Company: '$(AssemblyCompany)'
+        Product: '$(AssemblyProduct)'
+        Description: 'CQRS Generic Repositories by Imre Toth'
+        Copyright: '$(AssemblyCopyright)'
+        RepositoryType: 'Git'
+        VersionNumber: '$(AssemblyVersion)'
+        FileVersionNumber: '$(AssemblyVersion)'
+        InformationalVersion: '$(AssemblyVersion)'
+        PackageVersion: '$(AssemblyVersion)'
+        GeneratePackageOnBuild: false
+        LogLevel: 'verbose'
+        FailOnWarning: false
+        DisableTelemetry: false
+
+    - task: DotNetCoreCLI@2
+      displayName: 'dotnet restore packages'
+      inputs:
+        command: 'restore'
+        projects: '$(solution)'
+        feedsToUse: 'select'
+
+    - task: DotNetCoreCLI@2
+      displayName: 'dotnet build'
+      inputs:
+        command: 'build'
+        projects: '$(solution)'
+        arguments: '--configuration $(buildConfiguration)'
+
+    - task: DotNetCoreCLI@2
+      displayName: 'run tests'
+      inputs:
+       command: 'test'
+       projects: '**/*.Tests.csproj'
+       arguments: '--configuration $(buildConfiguration)'
+
+    - task: DotNetCoreCLI@2
+      displayName: 'dotnet pack'
+      inputs:
+        command: 'pack'
+        packagesToPack: 'src/Majorsoft.CQRS.Repositories/Majorsoft.CQRS.Repositories.csproj'
+        packDirectory: '$(Build.ArtifactStagingDirectory)/nupkgs'
+        nobuild: true
+        includesymbols: true
+        versioningScheme: 'byEnvVar'
+        versionEnvVar: '$(AssemblyVersion)$(PreviewPackageVersion)'
+
+    - task: DotNetCoreCLI@2
+      displayName: 'dotnet upload Nuget'
+      inputs:
+        command: 'push'
+        packagesToPush: '$(Build.ArtifactStagingDirectory)/nupkgs/*.nupkg'
+        nuGetFeedType: 'internal'
+        publishVstsFeed: '4f8b1f2e-37e5-4c51-b721-13f56be6a30d'

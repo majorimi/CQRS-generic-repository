@@ -1,0 +1,50 @@
+trigger:
+  batch: true
+  branches:
+    include:
+    - '*'
+  paths:
+    include:
+    - src/*
+
+name: 1.0.0.$(rev:r)
+
+pool:
+  vmImage: 'ubuntu-latest'
+
+variables:
+  solution: 'src/Majorsoft.CQRS.Repositories.sln'
+  buildPlatform: 'Any CPU'
+  buildConfiguration: 'Release'
+
+jobs:
+  - job: BuildAndPublish
+    displayName: Commit check Build
+    steps:
+
+    - task: UseDotNet@2
+      displayName: Install .NET 6
+      inputs:
+       packageType: 'sdk'
+       version: '6.0.x' # replace this value with the version that you need for your project
+
+    - task: DotNetCoreCLI@2
+      displayName: 'dotnet restore packages'
+      inputs:
+        command: 'restore'
+        projects: '$(solution)'
+        feedsToUse: 'select'
+
+    - task: DotNetCoreCLI@2
+      displayName: 'dotnet build'
+      inputs:
+        command: 'build'
+        projects: '$(solution)'
+        arguments: '--configuration $(buildConfiguration)'
+
+    - task: DotNetCoreCLI@2
+      displayName: 'run tests'
+      inputs:
+        command: 'test'
+        projects: '**/*.Tests.csproj'
+        arguments: '--configuration $(buildConfiguration)'

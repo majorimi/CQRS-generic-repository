@@ -1,0 +1,66 @@
+# ASP.NET Core
+# Build and test ASP.NET Core projects targeting .NET Core.
+# Add steps that run tests, create a NuGet package, deploy, and more:
+# https://docs.microsoft.com/azure/devops/pipelines/languages/dotnet-core
+
+trigger:
+  batch: true
+  branches:
+    include:
+    - master
+  paths:
+    include:
+    - demo/Majorsoft.Blazor.Components.DemoApp/*
+
+pr: none
+
+name: 1.0.0.$(rev:r)
+
+pool:
+  vmImage: 'ubuntu-latest'
+
+variables:
+  project: 'demo/Majorsoft.Blazor.Components.DemoApp/Majorsoft.Blazor.Components.DemoApp.csproj'
+  buildPlatform: 'Any CPU'
+  buildConfiguration: 'Release'
+
+jobs:
+  - job: BuildAndPublish
+    displayName: Publish sample App
+    steps:
+
+    - task: UseDotNet@2
+      displayName: Install .NET 5
+      inputs:
+       packageType: 'sdk'
+       version: '5.0.100' # replace this value with the version that you need for your project
+
+    - task: DotNetCoreCLI@2
+      displayName: 'dotnet restore packages'
+      inputs:
+        command: 'restore'
+        projects: $(project)
+        feedsToUse: 'select'
+
+    - task: DotNetCoreCLI@2
+      displayName: 'run tests'
+      inputs:
+       command: 'test'
+       projects: '**/*.Tests.csproj'
+       arguments: '--configuration $(buildConfiguration)'
+
+    - task: DotNetCoreCLI@2
+      displayName: 'dotnet publish'
+      inputs:
+        command: 'publish'
+        publishWebProjects: false
+        projects: $(project)
+        arguments: '-c Release -o $(Build.ArtifactStagingDirectory)/DemoApp'
+        zipAfterPublish: true
+        modifyOutputPath: false
+        # workingDirectory: 'demo/Majorsoft.Blazor.Components.DemoApp/'
+
+    - task: PublishBuildArtifacts@1
+      inputs:
+        pathtoPublish: '$(Build.ArtifactStagingDirectory)/DemoApp' 
+        artifactName: 'Majorsoft.Blazor.Components.DemoApp'

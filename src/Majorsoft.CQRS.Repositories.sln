@@ -3,9 +3,16 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.4.32804.182
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Majorsoft.CQRS.Repositories", "Majorsoft.CQRS.Repositories.csproj", "{E512EB55-E1BD-465C-81C5-17B42734A65F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Majorsoft.CQRS.Repositories", "Majorsoft.CQRS.Repositories\Majorsoft.CQRS.Repositories.csproj", "{E512EB55-E1BD-465C-81C5-17B42734A65F}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Majorsoft.CQRS.Repositories.Tests", "..\Majorsoft.CQRS.Repositories.Tests\Majorsoft.CQRS.Repositories.Tests.csproj", "{9CA32E2F-A205-4F0A-B6E5-64E803F40092}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Majorsoft.CQRS.Repositories.Tests", "Majorsoft.CQRS.Repositories.Tests\Majorsoft.CQRS.Repositories.Tests.csproj", "{9CA32E2F-A205-4F0A-B6E5-64E803F40092}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Pipelines", "Pipelines", "{6B66C590-A746-489D-B440-49F08ED8D684}"
+	ProjectSection(SolutionItems) = preProject
+		..\azure-pipelines-commit.yml = ..\azure-pipelines-commit.yml
+		..\azure-pipelines-Nuget.yml = ..\azure-pipelines-Nuget.yml
+		..\azure-pipelines-sampleApp.yml = ..\azure-pipelines-sampleApp.yml
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
