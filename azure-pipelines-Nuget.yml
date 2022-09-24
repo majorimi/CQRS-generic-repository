@@ -82,21 +82,21 @@ jobs:
        projects: '**/*.Tests.csproj'
        arguments: '--configuration $(buildConfiguration)'
 
-    - task: DotNetCoreCLI@2
-      displayName: 'dotnet pack'
-      inputs:
-        command: 'pack'
-        packagesToPack: 'src/Majorsoft.CQRS.Repositories/Majorsoft.CQRS.Repositories.csproj'
-        packDirectory: '$(Build.ArtifactStagingDirectory)/nupkgs'
-        nobuild: false
-        includesymbols: true
-        versioningScheme: 'byEnvVar'
-        versionEnvVar: '$(AssemblyVersion)$(PreviewPackageVersion)'
+    #- task: DotNetCoreCLI@2
+    #  displayName: 'dotnet pack'
+    #  inputs:
+    #    command: 'pack'
+    #    packagesToPack: 'src/Majorsoft.CQRS.Repositories/Majorsoft.CQRS.Repositories.csproj'
+    #    packDirectory: '$(Build.ArtifactStagingDirectory)/nupkgs'
+    #    nobuild: false
+    #    includesymbols: true
+    #    versioningScheme: 'byEnvVar'
+    #    versionEnvVar: '$(AssemblyVersion)$(PreviewPackageVersion)'
 
     - task: DotNetCoreCLI@2
       displayName: 'dotnet upload Nuget'
       inputs:
         command: 'push'
-        packagesToPush: '$(Build.ArtifactStagingDirectory)/nupkgs/*.nupkg'
+        packagesToPush: '$(Build.ArtifactStagingDirectory)/**/*.nupkg'
         nuGetFeedType: 'internal'
         publishVstsFeed: '4f8b1f2e-37e5-4c51-b721-13f56be6a30d'
