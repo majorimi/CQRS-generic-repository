@@ -88,7 +88,7 @@ jobs:
         command: 'pack'
         packagesToPack: 'src/Majorsoft.CQRS.Repositories/Majorsoft.CQRS.Repositories.csproj'
         packDirectory: '$(Build.ArtifactStagingDirectory)/nupkgs'
-        nobuild: true
+        nobuild: false
         includesymbols: true
         versioningScheme: 'byEnvVar'
         versionEnvVar: '$(AssemblyVersion)$(PreviewPackageVersion)'
