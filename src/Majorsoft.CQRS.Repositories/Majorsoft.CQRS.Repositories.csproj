@@ -11,6 +11,8 @@
 	  <Title>CQRS ready Generic Repository for EF</Title>
 	  <GenerateDocumentationFile>True</GenerateDocumentationFile>
 	  <PackageLicenseFile>License.txt</PackageLicenseFile>
+	  <PackageVersion></PackageVersion>
+	  <Version></Version>
   </PropertyGroup>
 
   <ItemGroup>
