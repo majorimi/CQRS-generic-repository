@@ -56,7 +56,7 @@ jobs:
         FileVersionNumber: '$(AssemblyVersion)'
         InformationalVersion: '$(AssemblyVersion)'
         PackageVersion: '$(AssemblyVersion)'
-        GeneratePackageOnBuild: false
+        GeneratePackageOnBuild: true
         LogLevel: 'verbose'
         FailOnWarning: false
         DisableTelemetry: false
@@ -97,6 +97,6 @@ jobs:
       displayName: 'dotnet upload Nuget'
       inputs:
         command: 'push'
-        packagesToPush: '$(Build.ArtifactStagingDirectory)/**/*.nupkg'
+        packagesToPush: 'src/Majorsoft.CQRS.Repositories/bin/$(buildConfiguration)/*.nupkg'
         nuGetFeedType: 'internal'
         publishVstsFeed: '4f8b1f2e-37e5-4c51-b721-13f56be6a30d'
