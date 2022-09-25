@@ -1,4 +1,6 @@
-Majorsoft CQRS Generic Repository
+<img align="left" width="140" height="140" src="https://github.com/majorimi/CQRS-generic-repository/blob/main/docs/C%23QRS_icon.png" />
+
+Majorsoft C(#)QRS Generic Repository
 ============
 
 [![Build Status](https://dev.azure.com/major-soft/GitHub/_apis/build/status/CQRS-generic-repository/CQRS-generic-repository-build-check?branchName=main)](https://dev.azure.com/major-soft/GitHub/_build/latest?definitionId=9&branchName=main)
